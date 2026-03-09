@@ -66,6 +66,10 @@ keymap = [
 
 # === Хранилище настроек ===
 [storage]
+tap_dance_entries = 16
+macro_entries = 16
+combo_entries = 16
+
 
 # === BLE настройка ===
 [ble]
