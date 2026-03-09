@@ -12,35 +12,34 @@ chip = "nrf52840"
 [layout]
 rows = 4
 cols = 5
-layers = 8
+layers = 3
 
-# === Keymap (пример - адаптируйте под себя!) ===
 keymap = [
   # === Layer 0: Base ===
-  # Левая половина (матрица: ряды 0-3, колонки 0-4)
+  # Левая половина
   [
     ["Q", "W", "E", "R", "T"],
     ["A", "S", "D", "F", "G"],
     ["Z", "X", "C", "V", "B"],
-    ["LCtrl", "LSft", "MO(1)", "Space", "LT(2,Tab)"]
+    ["LCtrl", "LShift", "MO(1)", "Space", "LT(2, Tab)"]
   ],
-  # Правая половина (матрица: ряды 0-3, колонки 5-9)
+  # Правая половина
   [
     ["Y", "U", "I", "O", "P"],
     ["H", "J", "K", "L", "Scln"],
     ["N", "M", "Comm", "Dot", "Sls"],
-    ["Bspc", "MO(1)", "RSft", "RCtrl", "Ent"]
+    ["Bspc", "MO(1)", "RShift", "RCtrl", "Enter"]
   ],
 
   # === Layer 1: Fn ===
   [
-    ["1", "2", "3", "4", "5"],
+    ["Kc1", "Kc2", "Kc3", "Kc4", "Kc5"],
     ["F1", "F2", "F3", "F4", "F5"],
     ["_", "_", "_", "_", "_"],
     ["_", "_", "TO(2)", "_", "_"]
   ],
   [
-    ["6", "7", "8", "9", "0"],
+    ["Kc6", "Kc7", "Kc8", "Kc9", "Kc0"],
     ["F6", "F7", "F8", "F9", "F10"],
     ["_", "_", "_", "_", "_"],
     ["_", "TO(0)", "_", "_", "_"]
@@ -48,7 +47,7 @@ keymap = [
 
   # === Layer 2: Nav ===
   [
-    ["Esc", "LGui", "LAlt", "_", "_"],
+    ["Escape", "LGui", "LAlt", "_", "_"],
     ["Tab", "Left", "Down", "Up", "Right"],
     ["_", "_", "_", "_", "_"],
     ["_", "_", "TO(0)", "_", "_"]
@@ -61,7 +60,26 @@ keymap = [
   ],
 ]
 
-# === BLE-сплит конфигурация ===
+# === Хранилище настроек (обязательно!) ===
+[storage]
+
+# === BLE настройка (на корневом уровне!) ===
+[ble]
+enabled = true
+
+# === Опционально: подсветка ===
+[light]
+# capslock.pin = "P0_26"
+# capslock.low_active = true
+
+# === Опционально: комбо-клавиши ===
+# [behavior.combo]
+# timeout = "150ms"
+# combos = [
+#   { actions = ["J", "K"], output = "L" }
+# ]
+
+# === Сплит-конфигурация ===
 [split]
 connection = "ble"
 
@@ -71,12 +89,16 @@ rows = 4
 cols = 5
 row_offset = 0
 col_offset = 0
-ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]  # ← Сгенерируйте уникальный!
+ble_addr = [0x18, 0xe2, 0x21, 0x80, 0xc0, 0xc7]
+# ⚠️ Батарея: P0_05 (D5) занят под матрицу, мониторинг не будет работать!
+# battery_adc_pin = "P0_05"
+# adc_divider_measured = 2000
+# adc_divider_total = 2806
 
 [split.central.matrix]
 matrix_type = "normal"
-diode_direction = "col2row"
-# Точно из totem_left.overlay: D4, D5, D10, D9, D8
+# diode_direction по умолчанию = col2row, ничего добавлять не нужно
+# row2col = true  # ← Раскомментируйте, ТОЛЬКО если матрица row2col
 row_pins = ["P0_02", "P0_03", "P0_28", "P0_29"]
 col_pins = ["P0_04", "P0_05", "P1_15", "P1_14", "P1_13"]
 
@@ -85,12 +107,11 @@ col_pins = ["P0_04", "P0_05", "P1_15", "P1_14", "P1_13"]
 rows = 4
 cols = 5
 row_offset = 4
-col_offset = 0
-ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]  # ← Уникальный, отличный от central!
+col_offset = 5  # ← Сдвиг колонок: 0-4 → логические 5-9
+ble_addr = [0x7e, 0xfe, 0x73, 0x9e, 0x66, 0xe3]
 
 [[split.peripheral.matrix]]
 matrix_type = "normal"
-diode_direction = "col2row"
-# Точно из totem_right.overlay: D8, D9, D10, D5, D4 (зеркально!)
 row_pins = ["P0_02", "P0_03", "P0_28", "P0_29"]
+# Порядок из totem_right.overlay: D8,D9,D10,D5,D4 → логические 9,8,7,6,5
 col_pins = ["P1_13", "P1_14", "P1_15", "P0_05", "P0_04"]
